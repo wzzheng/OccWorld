@@ -1,2 +1,61 @@
 # OccWorld
-3D World Model for Autonomous Driving
+### [Paper](https://arxiv.org/pdf/2311.12754)
+
+> OccWorld: Learning a 3D Occupancy World Model for Autonomous Driving
+
+> [Wenzhao Zheng](https://wzzheng.net/)\* $\dagger$, [Weiliang Chen](https://github.com/chen-wl20)\*, [Yuanhui Huang](https://scholar.google.com/citations?hl=zh-CN&user=LKVgsk4AAAAJ), [Borui Zhang](https://boruizhang.site/), [Yueqi Duan](https://duanyueqi.github.io/), [Jiwen Lu](http://ivg.au.tsinghua.edu.cn/Jiwen_Lu/)
+
+\* Equal contribution $\dagger$ Project leader
+
+**OccWorld models the joint evolutions of 3D scenes and ego movements.**
+
+Combined with self-supervised ([SelfOcc](https://github.com/huang-yh/SelfOcc)), LiDAR-collected ([TPVFormer](https://github.com/wzzheng/TPVFormer)), or machine-annotated ([SurroundOcc](https://github.com/weiyithu/SurroundOcc)) dense  3D occupancy, OccWorld has the potential to scale up to large-scale training, paving the way for **interpretable end-to-end large driving models**.
+
+## Overview
+
+![overview](./assets/overview.png)
+
+Given past 3D occupancy observations, our self-supervised OccWorld trained can forecast future scene evolutions and ego movements jointly. This task requires a spatial understanding of the 3D scene and temporal modeling of how driving scenarios develop. We observe that OccWorld can successfully forecast the movements of surrounding agents and future map elements such as drivable areas. OccWorld even generates more reasonable drivable areas than the ground truth, demonstrating its ability to understand the scene rather than memorizing training data. Still, it fails to forecast new vehicles entering the sight, which is difficult given their absence in the inputs. 
+
+## Introduction
+
+Understanding how the 3D scene evolves is vital for making decisions in autonomous driving. Most existing methods achieve this by predicting the movements of object boxes, which cannot capture more fine-grained scene information. In this paper, we explore a new framework of learning a world model, OccWorld, in the 3D Occupancy space to simultaneously predict the movement of the ego car and the evolution of the surrounding scenes. We propose to learn a world model based on 3D occupancy rather than 3D bounding boxes and segmentation maps for three reasons: 1) expressiveness. 3D occupancy can describe the more fine-grained 3D structure of the scene; 2) efficiency. 3D occupancy is more economical to obtain (e.g., from sparse LiDAR points). 3) versatility. 3D occupancy can adapt to both vision and LiDAR. To facilitate the modeling of the world evolution, we learn a reconstruction-based scene tokenizer on the 3D occupancy to obtain discrete scene tokens to describe the surrounding scenes. We then adopt a GPT-like spatial-temporal generative transformer to generate subsequent scene and ego tokens to decode the future occupancy and ego trajectory. Extensive experiments on the widely used nuScenes benchmark demonstrate the ability of OccWorld to effectively model the evolution of the driving scenes. OccWorld also produces competitive planning results without using instance and map supervision.
+
+### Framework
+![framework](./assets/framework.png)
+
+### Results
+
+#### 4D Occupancy Forecast
+![framework](./assets/4docc.png)
+
+#### Motion Planning
+![framework](./assets/planning.png)
+
+#### Visualizations
+![framework](./assets/vis.png)
+
+## Code
+
+Coming soon!
+
+## Related Projects
+
+Our code is based on [TPVFormer](https://github.com/wzzheng/TPVFormer), [SelfOcc](https://github.com/huang-yh/SelfOcc), and [PointOcc](https://github.com/wzzheng/PointOcc). 
+
+Also thanks to these excellent open-sourced repos:
+[SurroundOcc](https://github.com/weiyithu/SurroundOcc) 
+[OccFormer](https://github.com/zhangyp15/OccFormer)
+[BEVFormer](https://github.com/fundamentalvision/BEVFormer)
+
+## Citation
+
+If you find this project helpful, please consider citing the following paper:
+```
+@article{zheng2023occworld,
+    title={OccWorld: Learning a 3D Occupancy World Model for Autonomous Driving},
+    author={Zheng, Wenzhao and Chen, Weiliang and Huang, Yuanhui and Zhang, Borui and Duan, Yueqi and Lu, Jiwen },
+    journal={arXiv preprint arXiv:},
+    year={2023}
+}
+```
