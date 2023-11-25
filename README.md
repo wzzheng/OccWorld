@@ -48,10 +48,10 @@ Coming soon!
 2. Prepare the gts semantic occupancy introduced in [Occ3d](https://github.com/Tsinghua-MARS-Lab/Occ3D)
 
 3. Download our generated train/val pickle files and put them in data/
-    [nuscenes_infos_train_temporal_v3_scene.pkl]
+    [nuscenes_infos_train_temporal_v3_scene.pkl](https://pan.baidu.com/s/1e_sksV5v9dBlvYYINKprRw?pwd=9qct)
 
-    [nuscenes_infos_val_temporal_v3_scene.pkl]
-    
+    [nuscenes_infos_val_temporal_v3_scene.pkl](https://pan.baidu.com/s/1e_sksV5v9dBlvYYINKprRw?pwd=9qct)
+
   The dataset should be organized as follows:
   
 ```
