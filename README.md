@@ -35,6 +35,35 @@ Given past 3D occupancy observations, our self-supervised OccWorld trained can f
 
 Coming soon!
 
+## Installation
+1. Create conda environment with python version 3.8.0
+
+2. Install all the packages in environment.yaml
+
+3. Anything about the installation of mmdetection3d, please refer to [mmdetection3d](https://mmdetection3d.readthedocs.io/en/latest/getting_started.html#installation)
+
+## Preparing
+1. Create soft link from data/nuscenes to your_nuscenes_path
+
+2. Prepare the gts semantic occupancy introduced in [Occ3d](https://github.com/Tsinghua-MARS-Lab/Occ3D)
+
+3. Download our generated train/val pickle files and put them in data/
+    [nuscenes_infos_train_temporal_v3_scene.pkl]
+    [nuscenes_infos_val_temporal_v3_scene.pkl]
+  The dataset should be organized as follows:
+  
+```
+OccWorld/data
+    nuscenes                 -    downloaded from www.nuscenes.org
+        lidarseg
+        maps
+        samples
+        sweeps
+        v1.0-trainval
+        gts                  -    download from [Occ3d](https://github.com/Tsinghua-MARS-Lab/Occ3D)
+    nuscenes_infos_train_temporal_v3_scene.pkl
+    nuscenes_infos_val_temporal_v3_scene.pkl
+```
 ## Related Projects
 
 Our code is based on [TPVFormer](https://github.com/wzzheng/TPVFormer), [SelfOcc](https://github.com/huang-yh/SelfOcc), and [PointOcc](https://github.com/wzzheng/PointOcc). 
