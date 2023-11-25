@@ -64,6 +64,17 @@ OccWorld/data
     nuscenes_infos_train_temporal_v3_scene.pkl
     nuscenes_infos_val_temporal_v3_scene.pkl
 ```
+
+## Getting Started
+
+1. Train the OccWorld on RTX 4090 (a VQVAE used in OccWorld should be trained using similar command before training)
+```
+python train.py --py-config config/occworld.py --work-dir out/occworld
+```
+2. Eval the model on RTX 4090
+```
+python eval_metric_stp3.py --py-config config/occworld.py --work-dir out/occworld
+```
 ## Related Projects
 
 Our code is based on [TPVFormer](https://github.com/wzzheng/TPVFormer), [SelfOcc](https://github.com/huang-yh/SelfOcc), and [PointOcc](https://github.com/wzzheng/PointOcc). 
