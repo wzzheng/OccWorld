@@ -67,7 +67,7 @@ OccWorld/data
 
 ## Getting Started
 
-1. Train the OccWorld on RTX 4090 (a VQVAE used in OccWorld should be trained using similar command before training)
+1. Train the OccWorld on RTX 4090 (a VQVAE should be trained using similar command before training)
 ```
 python train.py --py-config config/occworld.py --work-dir out/occworld
 ```
