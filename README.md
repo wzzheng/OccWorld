@@ -49,7 +49,9 @@ Coming soon!
 
 3. Download our generated train/val pickle files and put them in data/
     [nuscenes_infos_train_temporal_v3_scene.pkl]
+
     [nuscenes_infos_val_temporal_v3_scene.pkl]
+    
   The dataset should be organized as follows:
   
 ```
