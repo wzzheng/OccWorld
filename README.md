@@ -60,7 +60,7 @@ OccWorld/data
         samples
         sweeps
         v1.0-trainval
-        gts                  -    download from [Occ3d](https://github.com/Tsinghua-MARS-Lab/Occ3D)
+        gts                  -    download from Occ3d
     nuscenes_infos_train_temporal_v3_scene.pkl
     nuscenes_infos_val_temporal_v3_scene.pkl
 ```
