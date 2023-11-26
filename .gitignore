@@ -11,3 +11,4 @@ analyze/
 *.log
 ckpts/
 results/
+.DS_Store
