@@ -83,3 +83,5 @@ def get_nuScenes_label_name(label_mapping):
         val_ = nuScenesyaml['learning_map'][i]
         nuScenes_label_name[val_] = nuScenesyaml['labels_16'][val_]
     return nuScenes_label_name
+
+
