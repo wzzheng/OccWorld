@@ -3,13 +3,17 @@
 
 > OccWorld: Learning a 3D Occupancy World Model for Autonomous Driving
 
-> [Wenzhao Zheng](https://wzzheng.net/)\* $\dagger$, [Weiliang Chen](https://github.com/chen-wl20)\*, [Yuanhui Huang](https://scholar.google.com/citations?hl=zh-CN&user=LKVgsk4AAAAJ), [Borui Zhang](https://boruizhang.site/), [Yueqi Duan](https://duanyueqi.github.io/), [Jiwen Lu](http://ivg.au.tsinghua.edu.cn/Jiwen_Lu/)
+> [Wenzhao Zheng](https://wzzheng.net/)\*, [Weiliang Chen](https://github.com/chen-wl20)\*, [Yuanhui Huang](https://scholar.google.com/citations?hl=zh-CN&user=LKVgsk4AAAAJ), [Borui Zhang](https://boruizhang.site/), [Yueqi Duan](https://duanyueqi.github.io/), [Jiwen Lu](http://ivg.au.tsinghua.edu.cn/Jiwen_Lu/)
 
-\* Equal contribution $\dagger$ Project leader
+\* Equal contribution
 
 **OccWorld models the joint evolutions of 3D scenes and ego movements.**
 
 Combined with self-supervised ([SelfOcc](https://github.com/huang-yh/SelfOcc)), LiDAR-collected ([TPVFormer](https://github.com/wzzheng/TPVFormer)), or machine-annotated ([SurroundOcc](https://github.com/weiyithu/SurroundOcc)) dense  3D occupancy, OccWorld has the potential to scale up to large-scale training, paving the way for **interpretable end-to-end large driving models**.
+
+## Demo
+
+![demo](./assets/demo.gif)
 
 ## Overview
 
@@ -33,27 +37,26 @@ Given past 3D occupancy observations, our self-supervised OccWorld trained can f
 
 ## Code
 
-Coming soon!
-
-## Installation
+### Installation
 1. Create conda environment with python version 3.8.0
 
 2. Install all the packages in environment.yaml
 
 3. Anything about the installation of mmdetection3d, please refer to [mmdetection3d](https://mmdetection3d.readthedocs.io/en/latest/getting_started.html#installation)
 
-## Preparing
+### Preparing
 1. Create soft link from data/nuscenes to your_nuscenes_path
 
 2. Prepare the gts semantic occupancy introduced in [Occ3d](https://github.com/Tsinghua-MARS-Lab/Occ3D)
 
 3. Download our generated train/val pickle files and put them in data/
+
     [nuscenes_infos_train_temporal_v3_scene.pkl](https://pan.baidu.com/s/1e_sksV5v9dBlvYYINKprRw?pwd=9qct)
 
     [nuscenes_infos_val_temporal_v3_scene.pkl](https://pan.baidu.com/s/1e_sksV5v9dBlvYYINKprRw?pwd=9qct)
 
   The dataset should be organized as follows:
-  
+
 ```
 OccWorld/data
     nuscenes                 -    downloaded from www.nuscenes.org
@@ -67,7 +70,7 @@ OccWorld/data
     nuscenes_infos_val_temporal_v3_scene.pkl
 ```
 
-## Getting Started
+### Getting Started
 
 1. Train the OccWorld on RTX 4090 (a VQVAE should be trained using similar command before training)
 ```
