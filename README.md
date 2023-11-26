@@ -1,5 +1,5 @@
 # OccWorld
-### [Paper](https://arxiv.org/pdf/2311.12754)
+### [Paper](https://arxiv.org/pdf/2311.12754) | [Project Page](https://wzzheng.net/OccWorld/) 
 
 > OccWorld: Learning a 3D Occupancy World Model for Autonomous Driving
 
@@ -21,30 +21,15 @@ Combined with self-supervised ([SelfOcc](https://github.com/huang-yh/SelfOcc)), 
 
 Given past 3D occupancy observations, our self-supervised OccWorld trained can forecast future scene evolutions and ego movements jointly. This task requires a spatial understanding of the 3D scene and temporal modeling of how driving scenarios develop. We observe that OccWorld can successfully forecast the movements of surrounding agents and future map elements such as drivable areas. OccWorld even generates more reasonable drivable areas than the ground truth, demonstrating its ability to understand the scene rather than memorizing training data. Still, it fails to forecast new vehicles entering the sight, which is difficult given their absence in the inputs. 
 
-### Framework
-![framework](./assets/framework.png)
 
-### Results
-
-#### 4D Occupancy Forecast
-![framework](./assets/4docc.png)
-
-#### Motion Planning
-![framework](./assets/planning.png)
-
-#### Visualizations
-![framework](./assets/vis.png)
-
-## Code
-
-### Installation
+## Installation
 1. Create conda environment with python version 3.8.0
 
 2. Install all the packages in environment.yaml
 
 3. Anything about the installation of mmdetection3d, please refer to [mmdetection3d](https://mmdetection3d.readthedocs.io/en/latest/getting_started.html#installation)
 
-### Preparing
+## Preparing
 1. Create soft link from data/nuscenes to your_nuscenes_path
 
 2. Prepare the gts semantic occupancy introduced in [Occ3d](https://github.com/Tsinghua-MARS-Lab/Occ3D)
@@ -70,13 +55,15 @@ OccWorld/data
     nuscenes_infos_val_temporal_v3_scene.pkl
 ```
 
-### Getting Started
+## Getting Started
 
-1. Train the OccWorld on RTX 4090 (a VQVAE should be trained using similar command before training)
+### Training
+Train the OccWorld on RTX 4090 with 24G GPU memory (a VQVAE should be trained using similar command before training).
 ```
 python train.py --py-config config/occworld.py --work-dir out/occworld
 ```
-2. Eval the model on RTX 4090
+### Evaluation
+Eval the model on RTX 4090 with 24G GPU memory.
 ```
 python eval_metric_stp3.py --py-config config/occworld.py --work-dir out/occworld
 ```
