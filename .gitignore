@@ -6,8 +6,6 @@ results/
 __pycache__/
 visualization/results/
 analyze/
-*.png
-*.jpg
-*.log
 ckpts/
 results/
+.DS_Store
