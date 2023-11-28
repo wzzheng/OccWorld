@@ -83,7 +83,7 @@ If you find this project helpful, please consider citing the following paper:
 @article{zheng2023occworld,
     title={OccWorld: Learning a 3D Occupancy World Model for Autonomous Driving},
     author={Zheng, Wenzhao and Chen, Weiliang and Huang, Yuanhui and Zhang, Borui and Duan, Yueqi and Lu, Jiwen },
-    journal={arXiv preprint arXiv:},
+    journal={arXiv preprint arXiv: 2311.16038},
     year={2023}
 }
 ```
