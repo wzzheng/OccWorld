@@ -36,9 +36,9 @@ Given past 3D occupancy observations, our self-supervised OccWorld trained can f
 
 3. Download our generated train/val pickle files and put them in data/
 
-    [nuscenes_infos_train_temporal_v3_scene.pkl](https://pan.baidu.com/s/1e_sksV5v9dBlvYYINKprRw?pwd=9qct)
+    [nuscenes_infos_train_temporal_v3_scene.pkl](https://cloud.tsinghua.edu.cn/d/9e231ed16e4a4caca3bd/)
 
-    [nuscenes_infos_val_temporal_v3_scene.pkl](https://pan.baidu.com/s/1e_sksV5v9dBlvYYINKprRw?pwd=9qct)
+    [nuscenes_infos_val_temporal_v3_scene.pkl](https://cloud.tsinghua.edu.cn/d/9e231ed16e4a4caca3bd/)
 
   The dataset should be organized as follows:
 
