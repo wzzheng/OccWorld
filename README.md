@@ -1,5 +1,5 @@
 # OccWorld
-### [Paper](https://arxiv.org/pdf/2311.12754) | [Project Page](https://wzzheng.net/OccWorld/) 
+### [Paper](https://arxiv.org/pdf/2311.16038) | [Project Page](https://wzzheng.net/OccWorld/) 
 
 > OccWorld: Learning a 3D Occupancy World Model for Autonomous Driving
 
