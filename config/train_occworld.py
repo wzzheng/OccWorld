@@ -1,24 +1,11 @@
-eval_with_pose = True
-start_frame = 0
-
-mid_frame = 5
-end_frame = 11
-
-
-plan_return_last = True
-eval_length = end_frame-mid_frame
-
-
-
 grad_max_norm = 35
 print_freq = 10
 max_epochs = 200
 warmup_iters = 50
-return_len_ = end_frame
-return_len_train = end_frame
-num_frames_ = 15
-load_from = 'out/occworld/epoch_2.pth'
-port = 25095
+return_len_ = 15
+return_len_train = 15
+load_from = 'out/vqvae/epoch_2.pth'
+port = 25096
 revise_ckpt = 3
 eval_every_epochs = 1
 save_every_epochs = 1
@@ -28,8 +15,8 @@ multisteplr_config = dict(
     decay_rate = 0.1,
     warmup_t = warmup_iters,
     warmup_lr_init = 1e-6,
-    t_in_epochs = False
-)
+    t_in_epochs = False)
+
 freeze_dict = dict(
     vae = True,
     transformer = False,
@@ -44,24 +31,24 @@ optimizer = dict(
     ),
 )
 
+
+
 data_path = 'data/nuscenes/'
 
 train_dataset_config = dict(
-    type='nuScenesSceneDatasetLidarTraverse',
+    type='nuScenesSceneDatasetLidar',
     data_path = data_path,
     return_len = return_len_train+1, 
     offset = 0,
-    imageset = 'data/nuscenes_infos_train_temporal_v3_scene.pkl',
-    test_mode=True 
+    imageset = 'data/nuscenes_infos_train_temporal_v3_scene.pkl', 
 )
 
 val_dataset_config = dict(
-    type='nuScenesSceneDatasetLidarTraverse',
+    type='nuScenesSceneDatasetLidar',
     data_path = data_path,
     return_len = return_len_+1, 
     offset = 0,
     imageset = 'data/nuscenes_infos_val_temporal_v3_scene.pkl', 
-    test_mode=True
 )
 
 train_wrapper_config = dict(
@@ -100,7 +87,6 @@ loss = dict(
             weight=0.1,
             loss_type='l2',
             num_modes=3,
-            # return_last=plan_return_last,
             input_dict={
                 'rel_pose': 'rel_pose',
                 'metas': 'metas'})
@@ -115,14 +101,13 @@ loss_input_convertion = dict(
     metas ='output_metas',
 )
 
-
 base_channel = 64
 _dim_ = 16
 expansion = 8
 n_e_ = 512
 model = dict(
     type = 'TransVQVAE',
-    num_frames=num_frames_,
+    num_frames=return_len_,
     delta_input=False,
     offset=1,
     vae = dict(
@@ -169,7 +154,7 @@ model = dict(
     transformer=dict(
         type = 'PlanUAutoRegTransformer',
         num_tokens=1,
-        num_frames=num_frames_,
+        num_frames=return_len_,
         num_layers=2,
         img_shape=(base_channel*2,50,50),
         pose_shape=(1,base_channel*2),

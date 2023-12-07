@@ -7,6 +7,10 @@
 
 \* Equal contribution
 
+## News
+
+- **[2023/12/7]** We update the code and config files for OccWorld. 
+
 **OccWorld models the joint evolutions of 3D scenes and ego movements.**
 
 Combined with self-supervised ([SelfOcc](https://github.com/huang-yh/SelfOcc)), LiDAR-collected ([TPVFormer](https://github.com/wzzheng/TPVFormer)), or machine-annotated ([SurroundOcc](https://github.com/weiyithu/SurroundOcc))  3D occupancy, OccWorld has the potential to scale up to large-scale training, paving the way for **interpretable end-to-end large driving models**.
@@ -58,12 +62,16 @@ OccWorld/data
 ## Getting Started
 
 ### Training
-Train the OccWorld on RTX 4090 with 24G GPU memory (a VQVAE should be trained using similar command before training).
+Train the VQVAE on RTX 4090 with 24G GPU memory.
 ```
-python train.py --py-config config/occworld.py --work-dir out/occworld
+python train.py --py-config config/train_vqvae.py --work-dir out/vqvae
+```
+Train the OccWorld on RTX 4090 with 24G GPU memory. (Remember to change the checkpoint path of VQVAE in the config file)
+```
+python train.py --py-config config/train_occworld.py --work-dir out/occworld
 ```
 ### Evaluation
-Eval the model on RTX 4090 with 24G GPU memory.
+Eval the model on RTX 4090 with 24G GPU memory. (Remember to change the checkpoint path of OccWorld in the config file)
 ```
 python eval_metric_stp3.py --py-config config/occworld.py --work-dir out/occworld
 ```
