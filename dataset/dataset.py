@@ -191,7 +191,7 @@ class nuScenesSceneDatasetLidarTraverse(nuScenesSceneDatasetLidar):
         self.with_velocity = True
         self.with_attr = True
         self.box_mode_3d = Box3DMode.LIDAR
-        # self.nusc = NuScenes(version='v1.0-trainval', dataroot='/data1/code/cwl/GenOcc/data/nuscenes', verbose=True)
+        
     def __len__(self):
         'Denotes the total number of samples'
         return sum(self.scene_lens)

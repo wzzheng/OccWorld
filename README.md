@@ -8,7 +8,7 @@
 \* Equal contribution
 
 ## News
-
+- **[2024/3/13]** We release the code for visualization, our training log and our pretrianed model.
 - **[2023/12/7]** We update the code and config files for OccWorld. 
 
 **OccWorld models the joint evolutions of 3D scenes and ego movements.**
@@ -58,6 +58,7 @@ OccWorld/data
     nuscenes_infos_train_temporal_v3_scene.pkl
     nuscenes_infos_val_temporal_v3_scene.pkl
 ```
+4. We also provide our pretrained model in https://cloud.tsinghua.edu.cn/d/ff4612b2453841fba7a5/ .
 
 ## Getting Started
 
@@ -75,6 +76,15 @@ Eval the model on RTX 4090 with 24G GPU memory. (Remember to change the checkpoi
 ```
 python eval_metric_stp3.py --py-config config/occworld.py --work-dir out/occworld
 ```
+### Visualization
+Visualize the results use the following code.
+```
+python visulize_demo.py --py-config config/train_occworld.py --work-dir out/occworld
+```
+Also, you can specific the visulized scene index by adding ```--scene-idx i0 i1 i2 ...```. After running the above code, two folders will 
+be created: "i_input" and "i." The "i" folder will contain the autoregressive predicted results 
+for t=0.5, 1, 1.5, 2, 2.5, and 3. The "i_input" folder will contain visualized ground truth results for t=0, 0.5, 1, 1.5, 2, 2.5, and 3.
+
 ## Related Projects
 
 Our code is based on [TPVFormer](https://github.com/wzzheng/TPVFormer), [SelfOcc](https://github.com/huang-yh/SelfOcc), and [PointOcc](https://github.com/wzzheng/PointOcc). 

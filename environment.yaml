@@ -1,4 +1,4 @@
-name: TPVFormer
+name: Occworld
 channels:
   - pytorch
   - nvidia
@@ -368,4 +368,4 @@ dependencies:
       - widgetsnbextension==4.0.8
       - yapf==0.40.1
       - zipp==3.16.2
-prefix: /home/cwl/.conda/envs/TPVFormer
+prefix: ~/.conda/envs/TPVFormer
