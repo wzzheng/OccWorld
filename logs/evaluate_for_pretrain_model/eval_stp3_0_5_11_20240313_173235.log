@@ -1,0 +1,2785 @@
+2024/03/13 17:32:36 - mmengine - INFO - Config:
+_dim_ = 16
+base_channel = 64
+data_path = 'data/nuscenes/'
+end_frame = 11
+eval_every_epochs = 1
+eval_length = 6
+eval_with_pose = True
+expansion = 8
+freeze_dict = dict(
+    pose_decoder=False, pose_encoder=False, transformer=False, vae=True)
+gpu_ids = range(0, 8)
+grad_max_norm = 35
+label_mapping = './config/label_mapping/nuscenes-occ.yaml'
+load_from = 'out/occworld/epoch_2.pth'
+loss = dict(
+    loss_cfgs=[
+        dict(
+            input_dict=dict(ce_inputs='ce_inputs', ce_labels='ce_labels'),
+            type='CeLoss',
+            weight=1.0),
+        dict(
+            input_dict=dict(metas='metas', rel_pose='rel_pose'),
+            loss_type='l2',
+            num_modes=3,
+            type='PlanRegLossLidar',
+            weight=0.1),
+    ],
+    type='MultiLoss')
+loss_input_convertion = dict(
+    ce_inputs='ce_inputs',
+    ce_labels='ce_labels',
+    metas='output_metas',
+    rel_pose='pose_decoded')
+max_epochs = 200
+mid_frame = 5
+model = dict(
+    delta_input=False,
+    num_frames=15,
+    offset=1,
+    pose_decoder=dict(
+        in_channels=128,
+        num_fut_ts=1,
+        num_layers=2,
+        num_modes=3,
+        type='PoseDecoder'),
+    pose_encoder=dict(
+        in_channels=5,
+        num_fut_ts=1,
+        num_layers=2,
+        num_modes=3,
+        out_channels=128,
+        type='PoseEncoder'),
+    transformer=dict(
+        channels=(
+            128,
+            256,
+            512,
+        ),
+        img_shape=(
+            128,
+            50,
+            50,
+        ),
+        learnable_queries=False,
+        num_frames=15,
+        num_layers=2,
+        num_tokens=1,
+        output_channel=512,
+        pose_attn_layers=2,
+        pose_output_channel=128,
+        pose_shape=(
+            1,
+            128,
+        ),
+        temporal_attn_layers=6,
+        tpe_dim=128,
+        type='PlanUAutoRegTransformer'),
+    type='TransVQVAE',
+    vae=dict(
+        decoder_cfg=dict(
+            attn_resolutions=(50, ),
+            ch=64,
+            ch_mult=(
+                1,
+                2,
+                4,
+            ),
+            dropout=0.0,
+            give_pre_end=False,
+            in_channels=128,
+            num_res_blocks=2,
+            out_ch=128,
+            resamp_with_conv=True,
+            resolution=200,
+            type='Decoder2D',
+            z_channels=128),
+        encoder_cfg=dict(
+            attn_resolutions=(50, ),
+            ch=64,
+            ch_mult=(
+                1,
+                2,
+                4,
+            ),
+            double_z=False,
+            dropout=0.0,
+            in_channels=128,
+            num_res_blocks=2,
+            out_ch=64,
+            resamp_with_conv=True,
+            resolution=200,
+            type='Encoder2D',
+            z_channels=128),
+        expansion=8,
+        num_classes=18,
+        type='VAERes2D',
+        vqvae_cfg=dict(
+            beta=1.0,
+            e_dim=128,
+            n_e=512,
+            sane_index_shape=True,
+            type='VectorQuantizer',
+            use_voxel=False,
+            z_channels=128)))
+multisteplr = False
+multisteplr_config = dict(
+    decay_rate=0.1,
+    decay_t=[
+        43500,
+    ],
+    t_in_epochs=False,
+    warmup_lr_init=1e-06,
+    warmup_t=50)
+n_e_ = 512
+num_frames_ = 15
+optimizer = dict(optimizer=dict(lr=0.001, type='AdamW', weight_decay=0.01))
+plan_return_last = True
+port = 25095
+print_freq = 10
+return_len_ = 11
+return_len_train = 11
+revise_ckpt = 3
+save_every_epochs = 1
+shapes = [
+    [
+        200,
+        200,
+    ],
+    [
+        100,
+        100,
+    ],
+    [
+        50,
+        50,
+    ],
+    [
+        25,
+        25,
+    ],
+]
+start_frame = 0
+train_dataset_config = dict(
+    data_path='data/nuscenes/',
+    imageset='data/nuscenes_infos_train_temporal_v3_scene.pkl',
+    offset=0,
+    return_len=12,
+    test_mode=True,
+    type='nuScenesSceneDatasetLidarTraverse')
+train_loader = dict(batch_size=1, num_workers=1, shuffle=True)
+train_wrapper_config = dict(phase='train', type='tpvformer_dataset_nuscenes')
+unique_label = [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+]
+val_dataset_config = dict(
+    data_path='data/nuscenes/',
+    imageset='data/nuscenes_infos_val_temporal_v3_scene.pkl',
+    offset=0,
+    return_len=12,
+    test_mode=True,
+    type='nuScenesSceneDatasetLidarTraverse')
+val_loader = dict(batch_size=1, num_workers=1, shuffle=False)
+val_wrapper_config = dict(phase='val', type='tpvformer_dataset_nuscenes')
+warmup_iters = 50
+work_dir = 'out/origin/'
+
+Name of parameter - Initialization information
+
+vae.encoder.conv_in.weight - torch.Size([64, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.conv_in.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.0.norm1.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.0.norm1.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.0.conv1.weight - torch.Size([64, 64, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.0.conv1.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.0.norm2.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.0.norm2.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.0.conv2.weight - torch.Size([64, 64, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.0.conv2.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.1.norm1.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.1.norm1.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.1.conv1.weight - torch.Size([64, 64, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.1.conv1.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.1.norm2.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.1.norm2.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.1.conv2.weight - torch.Size([64, 64, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.block.1.conv2.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.downsample.conv.weight - torch.Size([64, 64, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.0.downsample.conv.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.0.norm1.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.0.norm1.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.0.conv1.weight - torch.Size([128, 64, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.0.conv1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.0.norm2.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.0.norm2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.0.conv2.weight - torch.Size([128, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.0.conv2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.0.nin_shortcut.weight - torch.Size([128, 64, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.0.nin_shortcut.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.1.norm1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.1.norm1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.1.conv1.weight - torch.Size([128, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.1.conv1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.1.norm2.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.1.norm2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.1.conv2.weight - torch.Size([128, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.block.1.conv2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.downsample.conv.weight - torch.Size([128, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.1.downsample.conv.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.0.norm1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.0.norm1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.0.conv1.weight - torch.Size([256, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.0.conv1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.0.norm2.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.0.norm2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.0.conv2.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.0.conv2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.0.nin_shortcut.weight - torch.Size([256, 128, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.0.nin_shortcut.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.1.norm1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.1.norm1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.1.conv1.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.1.conv1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.1.norm2.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.1.norm2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.1.conv2.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.block.1.conv2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.0.norm.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.0.norm.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.0.q.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.0.q.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.0.k.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.0.k.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.0.v.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.0.v.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.0.proj_out.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.0.proj_out.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.1.norm.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.1.norm.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.1.q.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.1.q.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.1.k.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.1.k.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.1.v.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.1.v.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.1.proj_out.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.down.2.attn.1.proj_out.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_1.norm1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_1.norm1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_1.conv1.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_1.conv1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_1.norm2.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_1.norm2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_1.conv2.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_1.conv2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.attn_1.norm.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.attn_1.norm.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.attn_1.q.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.attn_1.q.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.attn_1.k.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.attn_1.k.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.attn_1.v.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.attn_1.v.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.attn_1.proj_out.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.attn_1.proj_out.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_2.norm1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_2.norm1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_2.conv1.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_2.conv1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_2.norm2.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_2.norm2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_2.conv2.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.mid.block_2.conv2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.norm_out.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.norm_out.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.conv_out.weight - torch.Size([128, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.encoder.conv_out.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.conv_in.weight - torch.Size([256, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.conv_in.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_1.norm1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_1.norm1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_1.conv1.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_1.conv1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_1.norm2.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_1.norm2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_1.conv2.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_1.conv2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.attn_1.norm.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.attn_1.norm.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.attn_1.q.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.attn_1.q.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.attn_1.k.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.attn_1.k.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.attn_1.v.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.attn_1.v.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.attn_1.proj_out.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.attn_1.proj_out.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_2.norm1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_2.norm1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_2.conv1.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_2.conv1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_2.norm2.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_2.norm2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_2.conv2.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.mid.block_2.conv2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.0.norm1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.0.norm1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.0.conv1.weight - torch.Size([64, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.0.conv1.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.0.norm2.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.0.norm2.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.0.conv2.weight - torch.Size([64, 64, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.0.conv2.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.0.nin_shortcut.weight - torch.Size([64, 128, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.0.nin_shortcut.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.1.norm1.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.1.norm1.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.1.conv1.weight - torch.Size([64, 64, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.1.conv1.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.1.norm2.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.1.norm2.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.1.conv2.weight - torch.Size([64, 64, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.0.block.1.conv2.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.0.norm1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.0.norm1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.0.conv1.weight - torch.Size([128, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.0.conv1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.0.norm2.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.0.norm2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.0.conv2.weight - torch.Size([128, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.0.conv2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.0.nin_shortcut.weight - torch.Size([128, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.0.nin_shortcut.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.1.norm1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.1.norm1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.1.conv1.weight - torch.Size([128, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.1.conv1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.1.norm2.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.1.norm2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.1.conv2.weight - torch.Size([128, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.block.1.conv2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.upsample.conv.weight - torch.Size([128, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.1.upsample.conv.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.0.norm1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.0.norm1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.0.conv1.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.0.conv1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.0.norm2.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.0.norm2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.0.conv2.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.0.conv2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.1.norm1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.1.norm1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.1.conv1.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.1.conv1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.1.norm2.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.1.norm2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.1.conv2.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.block.1.conv2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.0.norm.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.0.norm.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.0.q.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.0.q.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.0.k.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.0.k.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.0.v.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.0.v.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.0.proj_out.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.0.proj_out.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.1.norm.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.1.norm.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.1.q.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.1.q.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.1.k.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.1.k.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.1.v.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.1.v.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.1.proj_out.weight - torch.Size([256, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.attn.1.proj_out.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.upsample.conv.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.up.2.upsample.conv.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.norm_out.weight - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.norm_out.bias - torch.Size([64]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.conv_out.weight - torch.Size([128, 64, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.decoder.conv_out.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.class_embeds.weight - torch.Size([18, 8]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.vqvae.embedding.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.vqvae.quant_conv.weight - torch.Size([128, 128, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.vqvae.quant_conv.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.vqvae.post_quant_conv.weight - torch.Size([128, 128, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+vae.vqvae.post_quant_conv.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_embeddings.weight - torch.Size([16, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_temporal_embeddings.weight - torch.Size([16, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.0.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.0.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.0.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.0.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.0.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.0.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.0.2.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.0.2.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.0.2.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.0.2.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.0.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.0.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.1.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.1.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.1.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.1.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.1.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.1.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.1.2.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.1.2.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.1.2.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.1.2.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.1.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.1.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.2.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.2.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.2.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.2.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.2.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.2.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.2.2.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.2.2.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.2.2.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.2.2.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.2.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.2.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.3.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.3.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.3.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.3.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.3.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.3.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.3.2.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.3.2.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.3.2.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.3.2.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.3.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.3.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.4.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.4.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.4.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.4.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.4.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.4.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.4.2.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.4.2.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.4.2.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.4.2.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.4.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.4.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.5.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.5.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.5.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.5.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.5.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.5.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.5.2.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.5.2.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.5.2.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.5.2.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.5.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.0.5.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.0.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.0.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.0.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.0.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.0.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.0.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.0.2.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.0.2.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.0.2.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.0.2.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.0.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.0.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.1.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.1.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.1.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.1.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.1.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.1.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.1.2.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.1.2.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.1.2.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.1.2.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.1.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.1.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.2.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.2.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.2.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.2.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.2.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.2.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.2.2.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.2.2.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.2.2.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.2.2.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.2.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.2.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.3.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.3.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.3.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.3.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.3.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.3.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.3.2.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.3.2.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.3.2.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.3.2.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.3.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.3.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.4.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.4.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.4.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.4.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.4.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.4.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.4.2.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.4.2.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.4.2.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.4.2.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.4.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.4.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.5.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.5.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.5.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.5.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.5.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.5.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.5.2.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.5.2.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.5.2.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.5.2.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.5.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_en.1.5.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.0.0.in_proj_weight - torch.Size([1536, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.0.0.in_proj_bias - torch.Size([1536]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.0.0.out_proj.weight - torch.Size([512, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.0.0.out_proj.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.0.1.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.0.1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.0.2.fc1.weight - torch.Size([2048, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.0.2.fc1.bias - torch.Size([2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.0.2.fc2.weight - torch.Size([512, 2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.0.2.fc2.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.0.3.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.0.3.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.1.0.in_proj_weight - torch.Size([1536, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.1.0.in_proj_bias - torch.Size([1536]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.1.0.out_proj.weight - torch.Size([512, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.1.0.out_proj.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.1.1.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.1.1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.1.2.fc1.weight - torch.Size([2048, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.1.2.fc1.bias - torch.Size([2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.1.2.fc2.weight - torch.Size([512, 2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.1.2.fc2.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.1.3.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.1.3.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.2.0.in_proj_weight - torch.Size([1536, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.2.0.in_proj_bias - torch.Size([1536]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.2.0.out_proj.weight - torch.Size([512, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.2.0.out_proj.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.2.1.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.2.1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.2.2.fc1.weight - torch.Size([2048, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.2.2.fc1.bias - torch.Size([2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.2.2.fc2.weight - torch.Size([512, 2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.2.2.fc2.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.2.3.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.2.3.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.3.0.in_proj_weight - torch.Size([1536, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.3.0.in_proj_bias - torch.Size([1536]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.3.0.out_proj.weight - torch.Size([512, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.3.0.out_proj.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.3.1.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.3.1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.3.2.fc1.weight - torch.Size([2048, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.3.2.fc1.bias - torch.Size([2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.3.2.fc2.weight - torch.Size([512, 2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.3.2.fc2.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.3.3.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.3.3.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.4.0.in_proj_weight - torch.Size([1536, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.4.0.in_proj_bias - torch.Size([1536]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.4.0.out_proj.weight - torch.Size([512, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.4.0.out_proj.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.4.1.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.4.1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.4.2.fc1.weight - torch.Size([2048, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.4.2.fc1.bias - torch.Size([2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.4.2.fc2.weight - torch.Size([512, 2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.4.2.fc2.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.4.3.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.4.3.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.5.0.in_proj_weight - torch.Size([1536, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.5.0.in_proj_bias - torch.Size([1536]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.5.0.out_proj.weight - torch.Size([512, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.5.0.out_proj.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.5.1.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.5.1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.5.2.fc1.weight - torch.Size([2048, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.5.2.fc1.bias - torch.Size([2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.5.2.fc2.weight - torch.Size([512, 2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.5.2.fc2.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.5.3.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.0.5.3.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.0.0.in_proj_weight - torch.Size([768, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.0.0.in_proj_bias - torch.Size([768]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.0.0.out_proj.weight - torch.Size([256, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.0.0.out_proj.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.0.1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.0.1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.0.2.fc1.weight - torch.Size([1024, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.0.2.fc1.bias - torch.Size([1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.0.2.fc2.weight - torch.Size([256, 1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.0.2.fc2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.0.3.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.0.3.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.1.0.in_proj_weight - torch.Size([768, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.1.0.in_proj_bias - torch.Size([768]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.1.0.out_proj.weight - torch.Size([256, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.1.0.out_proj.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.1.1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.1.1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.1.2.fc1.weight - torch.Size([1024, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.1.2.fc1.bias - torch.Size([1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.1.2.fc2.weight - torch.Size([256, 1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.1.2.fc2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.1.3.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.1.3.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.2.0.in_proj_weight - torch.Size([768, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.2.0.in_proj_bias - torch.Size([768]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.2.0.out_proj.weight - torch.Size([256, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.2.0.out_proj.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.2.1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.2.1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.2.2.fc1.weight - torch.Size([1024, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.2.2.fc1.bias - torch.Size([1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.2.2.fc2.weight - torch.Size([256, 1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.2.2.fc2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.2.3.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.2.3.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.3.0.in_proj_weight - torch.Size([768, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.3.0.in_proj_bias - torch.Size([768]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.3.0.out_proj.weight - torch.Size([256, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.3.0.out_proj.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.3.1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.3.1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.3.2.fc1.weight - torch.Size([1024, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.3.2.fc1.bias - torch.Size([1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.3.2.fc2.weight - torch.Size([256, 1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.3.2.fc2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.3.3.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.3.3.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.4.0.in_proj_weight - torch.Size([768, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.4.0.in_proj_bias - torch.Size([768]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.4.0.out_proj.weight - torch.Size([256, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.4.0.out_proj.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.4.1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.4.1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.4.2.fc1.weight - torch.Size([1024, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.4.2.fc1.bias - torch.Size([1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.4.2.fc2.weight - torch.Size([256, 1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.4.2.fc2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.4.3.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.4.3.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.5.0.in_proj_weight - torch.Size([768, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.5.0.in_proj_bias - torch.Size([768]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.5.0.out_proj.weight - torch.Size([256, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.5.0.out_proj.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.5.1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.5.1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.5.2.fc1.weight - torch.Size([1024, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.5.2.fc1.bias - torch.Size([1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.5.2.fc2.weight - torch.Size([256, 1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.5.2.fc2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.5.3.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.temporal_attentions_de.1.5.3.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.0.0.ln.weight - torch.Size([50, 50]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.0.0.ln.bias - torch.Size([50, 50]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.0.0.conv1.weight - torch.Size([128, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.0.0.conv1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.0.0.conv2.weight - torch.Size([128, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.0.0.conv2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.0.1.ln.weight - torch.Size([50, 50]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.0.1.ln.bias - torch.Size([50, 50]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.0.1.conv1.weight - torch.Size([128, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.0.1.conv1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.0.1.conv2.weight - torch.Size([128, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.0.1.conv2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.1.0.ln.weight - torch.Size([25, 25]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.1.0.ln.bias - torch.Size([25, 25]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.1.0.conv1.weight - torch.Size([256, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.1.0.conv1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.1.0.conv2.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.1.0.conv2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.1.0.shortcut.weight - torch.Size([256, 128, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.1.0.shortcut.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.1.1.ln.weight - torch.Size([25, 25]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.1.1.ln.bias - torch.Size([25, 25]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.1.1.conv1.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.1.1.conv1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.1.1.conv2.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.encoders.1.1.conv2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.0.0.ln.weight - torch.Size([512, 25, 25]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.0.0.ln.bias - torch.Size([512, 25, 25]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.0.0.conv1.weight - torch.Size([256, 512, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.0.0.conv1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.0.0.conv2.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.0.0.conv2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.0.0.shortcut.weight - torch.Size([256, 512, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.0.0.shortcut.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.0.1.ln.weight - torch.Size([256, 25, 25]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.0.1.ln.bias - torch.Size([256, 25, 25]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.0.1.conv1.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.0.1.conv1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.0.1.conv2.weight - torch.Size([256, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.0.1.conv2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.1.0.ln.weight - torch.Size([256, 50, 50]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.1.0.ln.bias - torch.Size([256, 50, 50]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.1.0.conv1.weight - torch.Size([128, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.1.0.conv1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.1.0.conv2.weight - torch.Size([128, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.1.0.conv2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.1.0.shortcut.weight - torch.Size([128, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.1.0.shortcut.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.1.1.ln.weight - torch.Size([128, 50, 50]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.1.1.ln.bias - torch.Size([128, 50, 50]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.1.1.conv1.weight - torch.Size([128, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.1.1.conv1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.1.1.conv2.weight - torch.Size([128, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.decoders.1.1.conv2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.2.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.2.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.2.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.2.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.4.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.4.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.4.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.4.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.5.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.0.5.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.2.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.2.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.2.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.2.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.4.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.4.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.4.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.4.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.5.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.0.1.5.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.2.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.2.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.2.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.2.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.4.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.4.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.4.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.4.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.5.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.0.5.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.0.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.0.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.0.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.0.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.1.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.2.in_proj_weight - torch.Size([384, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.2.in_proj_bias - torch.Size([384]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.2.out_proj.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.2.out_proj.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.3.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.3.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.4.fc1.weight - torch.Size([512, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.4.fc1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.4.fc2.weight - torch.Size([128, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.4.fc2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.5.weight - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_en.1.1.5.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_en.0.0.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_en.0.0.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_en.0.2.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_en.0.2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_en.1.0.weight - torch.Size([256, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_en.1.0.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_en.1.2.weight - torch.Size([256, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_en.1.2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.0.in_proj_weight - torch.Size([1536, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.0.in_proj_bias - torch.Size([1536]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.0.out_proj.weight - torch.Size([512, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.0.out_proj.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.1.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.2.in_proj_weight - torch.Size([1536, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.2.in_proj_bias - torch.Size([1536]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.2.out_proj.weight - torch.Size([512, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.2.out_proj.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.3.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.3.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.4.fc1.weight - torch.Size([2048, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.4.fc1.bias - torch.Size([2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.4.fc2.weight - torch.Size([512, 2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.4.fc2.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.5.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.0.5.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.0.in_proj_weight - torch.Size([1536, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.0.in_proj_bias - torch.Size([1536]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.0.out_proj.weight - torch.Size([512, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.0.out_proj.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.1.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.2.in_proj_weight - torch.Size([1536, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.2.in_proj_bias - torch.Size([1536]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.2.out_proj.weight - torch.Size([512, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.2.out_proj.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.3.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.3.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.4.fc1.weight - torch.Size([2048, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.4.fc1.bias - torch.Size([2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.4.fc2.weight - torch.Size([512, 2048]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.4.fc2.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.5.weight - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.0.1.5.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.0.in_proj_weight - torch.Size([768, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.0.in_proj_bias - torch.Size([768]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.0.out_proj.weight - torch.Size([256, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.0.out_proj.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.2.in_proj_weight - torch.Size([768, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.2.in_proj_bias - torch.Size([768]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.2.out_proj.weight - torch.Size([256, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.2.out_proj.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.3.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.3.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.4.fc1.weight - torch.Size([1024, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.4.fc1.bias - torch.Size([1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.4.fc2.weight - torch.Size([256, 1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.4.fc2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.5.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.0.5.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.0.in_proj_weight - torch.Size([768, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.0.in_proj_bias - torch.Size([768]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.0.out_proj.weight - torch.Size([256, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.0.out_proj.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.1.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.2.in_proj_weight - torch.Size([768, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.2.in_proj_bias - torch.Size([768]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.2.out_proj.weight - torch.Size([256, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.2.out_proj.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.3.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.3.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.4.fc1.weight - torch.Size([1024, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.4.fc1.bias - torch.Size([1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.4.fc2.weight - torch.Size([256, 1024]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.4.fc2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.5.weight - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_attn_de.1.1.5.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_de.0.0.weight - torch.Size([256, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_de.0.0.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_de.0.2.weight - torch.Size([256, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_de.0.2.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_de.1.0.weight - torch.Size([128, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_de.1.0.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_de.1.2.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_de.1.2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_up.0.weight - torch.Size([256, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_up.0.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_up.1.weight - torch.Size([128, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_up.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.downsamples.0.weight - torch.Size([128, 128, 2, 2]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.downsamples.0.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.downsamples.1.weight - torch.Size([256, 256, 2, 2]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.downsamples.1.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.upsamples.0.weight - torch.Size([512, 256, 2, 2]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.upsamples.0.bias - torch.Size([256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.upsamples.1.weight - torch.Size([256, 128, 2, 2]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.upsamples.1.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.mid.0.ln.weight - torch.Size([256, 12, 12]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.mid.0.ln.bias - torch.Size([256, 12, 12]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.mid.0.conv1.weight - torch.Size([512, 256, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.mid.0.conv1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.mid.0.conv2.weight - torch.Size([512, 512, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.mid.0.conv2.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.mid.0.shortcut.weight - torch.Size([512, 256, 1, 1]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.mid.0.shortcut.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.mid.1.ln.weight - torch.Size([512, 12, 12]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.mid.1.ln.bias - torch.Size([512, 12, 12]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.mid.1.conv1.weight - torch.Size([512, 512, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.mid.1.conv1.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.mid.1.conv2.weight - torch.Size([512, 512, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.mid.1.conv2.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_mid.0.weight - torch.Size([512, 256]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_mid.0.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_mid.2.weight - torch.Size([512, 512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_mid.2.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.conv_out.weight - torch.Size([512, 128, 3, 3]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.conv_out.bias - torch.Size([512]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_out.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+transformer.pose_out.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+pose_encoder.pose_encoder.0.weight - torch.Size([128, 5]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+pose_encoder.pose_encoder.0.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+pose_encoder.pose_encoder.2.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+pose_encoder.pose_encoder.2.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+pose_decoder.pose_decoder.0.weight - torch.Size([128, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+pose_decoder.pose_decoder.0.bias - torch.Size([128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+pose_decoder.pose_decoder.2.weight - torch.Size([6, 128]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+
+pose_decoder.pose_decoder.2.bias - torch.Size([6]): 
+The value is the same before and after calling `init_weights` of TransVQVAE  
+2024/03/13 17:33:06 - mmengine - INFO - Number of params: 72385578
+2024/03/13 17:33:06 - mmengine - INFO - Freezing model according to freeze_dict:{'vae': True, 'transformer': False, 'pose_encoder': False, 'pose_decoder': False}
+2024/03/13 17:33:06 - mmengine - INFO - Freezed vae parameters
+2024/03/13 17:33:06 - mmengine - INFO - Number of params after freezed: 58217306
+2024/03/13 17:33:06 - mmengine - INFO - converted sync bn.
+2024/03/13 17:33:09 - mmengine - INFO - done ddp model
+2024/03/13 17:33:22 - mmengine - INFO - resume from: out/origin/latest.pth
+2024/03/13 17:33:22 - mmengine - INFO - work dir: out/origin/
+2024/03/13 17:33:53 - mmengine - INFO - [EVAL] Epoch 200 Iter     0/  528: Loss: 5.091 (5.091)
+2024/03/13 17:33:53 - mmengine - INFO - CeLoss: 5.07704, PlanRegLossLidar: 0.14454
+2024/03/13 17:33:59 - mmengine - INFO - [EVAL] Epoch 200 Iter    10/  528: Loss: 8.436 (8.055)
+2024/03/13 17:33:59 - mmengine - INFO - CeLoss: 8.35972, PlanRegLossLidar: 0.76002
+2024/03/13 17:34:04 - mmengine - INFO - [EVAL] Epoch 200 Iter    20/  528: Loss: 9.958 (8.378)
+2024/03/13 17:34:04 - mmengine - INFO - CeLoss: 9.85391, PlanRegLossLidar: 1.03898
+2024/03/13 17:34:16 - mmengine - INFO - [EVAL] Epoch 200 Iter    30/  528: Loss: 8.952 (8.465)
+2024/03/13 17:34:16 - mmengine - INFO - CeLoss: 8.84810, PlanRegLossLidar: 1.04344
+2024/03/13 17:34:19 - mmengine - INFO - [EVAL] Epoch 200 Iter    40/  528: Loss: 6.597 (8.184)
+2024/03/13 17:34:19 - mmengine - INFO - CeLoss: 6.56241, PlanRegLossLidar: 0.34828
+2024/03/13 17:34:22 - mmengine - INFO - [EVAL] Epoch 200 Iter    50/  528: Loss: 5.930 (7.724)
+2024/03/13 17:34:22 - mmengine - INFO - CeLoss: 5.78361, PlanRegLossLidar: 1.46747
+2024/03/13 17:34:26 - mmengine - INFO - [EVAL] Epoch 200 Iter    60/  528: Loss: 5.446 (7.295)
+2024/03/13 17:34:26 - mmengine - INFO - CeLoss: 5.36780, PlanRegLossLidar: 0.78370
+2024/03/13 17:34:29 - mmengine - INFO - [EVAL] Epoch 200 Iter    70/  528: Loss: 1.519 (7.173)
+2024/03/13 17:34:29 - mmengine - INFO - CeLoss: 1.51862, PlanRegLossLidar: 0.00039
+2024/03/13 17:34:32 - mmengine - INFO - [EVAL] Epoch 200 Iter    80/  528: Loss: 7.413 (6.886)
+2024/03/13 17:34:32 - mmengine - INFO - CeLoss: 7.29581, PlanRegLossLidar: 1.16854
+2024/03/13 17:34:36 - mmengine - INFO - [EVAL] Epoch 200 Iter    90/  528: Loss: 8.606 (6.940)
+2024/03/13 17:34:36 - mmengine - INFO - CeLoss: 8.57894, PlanRegLossLidar: 0.26655
+2024/03/13 17:34:39 - mmengine - INFO - [EVAL] Epoch 200 Iter   100/  528: Loss: 7.408 (7.073)
+2024/03/13 17:34:39 - mmengine - INFO - CeLoss: 7.35163, PlanRegLossLidar: 0.56284
+2024/03/13 17:34:43 - mmengine - INFO - [EVAL] Epoch 200 Iter   110/  528: Loss: 7.877 (7.117)
+2024/03/13 17:34:43 - mmengine - INFO - CeLoss: 7.83192, PlanRegLossLidar: 0.45532
+2024/03/13 17:34:47 - mmengine - INFO - [EVAL] Epoch 200 Iter   120/  528: Loss: 3.759 (7.159)
+2024/03/13 17:34:47 - mmengine - INFO - CeLoss: 3.75694, PlanRegLossLidar: 0.02240
+2024/03/13 17:34:51 - mmengine - INFO - [EVAL] Epoch 200 Iter   130/  528: Loss: 6.744 (7.196)
+2024/03/13 17:34:51 - mmengine - INFO - CeLoss: 6.66800, PlanRegLossLidar: 0.76152
+2024/03/13 17:35:00 - mmengine - INFO - [EVAL] Epoch 200 Iter   140/  528: Loss: 6.347 (7.198)
+2024/03/13 17:35:00 - mmengine - INFO - CeLoss: 6.32991, PlanRegLossLidar: 0.16972
+2024/03/13 17:35:08 - mmengine - INFO - [EVAL] Epoch 200 Iter   150/  528: Loss: 8.239 (7.263)
+2024/03/13 17:35:08 - mmengine - INFO - CeLoss: 8.21049, PlanRegLossLidar: 0.28678
+2024/03/13 17:35:17 - mmengine - INFO - [EVAL] Epoch 200 Iter   160/  528: Loss: 5.194 (7.167)
+2024/03/13 17:35:17 - mmengine - INFO - CeLoss: 5.15426, PlanRegLossLidar: 0.39284
+2024/03/13 17:35:25 - mmengine - INFO - [EVAL] Epoch 200 Iter   170/  528: Loss: 1.812 (7.097)
+2024/03/13 17:35:25 - mmengine - INFO - CeLoss: 1.79170, PlanRegLossLidar: 0.20430
+2024/03/13 17:35:33 - mmengine - INFO - [EVAL] Epoch 200 Iter   180/  528: Loss: 8.023 (7.095)
+2024/03/13 17:35:33 - mmengine - INFO - CeLoss: 7.95399, PlanRegLossLidar: 0.68617
+2024/03/13 17:35:41 - mmengine - INFO - [EVAL] Epoch 200 Iter   190/  528: Loss: 9.896 (7.111)
+2024/03/13 17:35:41 - mmengine - INFO - CeLoss: 9.65705, PlanRegLossLidar: 2.39056
+2024/03/13 17:35:49 - mmengine - INFO - [EVAL] Epoch 200 Iter   200/  528: Loss: 1.225 (7.070)
+2024/03/13 17:35:49 - mmengine - INFO - CeLoss: 1.22499, PlanRegLossLidar: 0.00060
+2024/03/13 17:35:57 - mmengine - INFO - [EVAL] Epoch 200 Iter   210/  528: Loss: 7.799 (6.969)
+2024/03/13 17:35:57 - mmengine - INFO - CeLoss: 7.65835, PlanRegLossLidar: 1.40785
+2024/03/13 17:36:07 - mmengine - INFO - [EVAL] Epoch 200 Iter   220/  528: Loss: 4.425 (6.929)
+2024/03/13 17:36:07 - mmengine - INFO - CeLoss: 4.40719, PlanRegLossLidar: 0.17883
+2024/03/13 17:36:15 - mmengine - INFO - [EVAL] Epoch 200 Iter   230/  528: Loss: 8.240 (6.854)
+2024/03/13 17:36:15 - mmengine - INFO - CeLoss: 8.08134, PlanRegLossLidar: 1.58380
+2024/03/13 17:36:25 - mmengine - INFO - [EVAL] Epoch 200 Iter   240/  528: Loss: 8.355 (6.849)
+2024/03/13 17:36:25 - mmengine - INFO - CeLoss: 8.27943, PlanRegLossLidar: 0.75730
+2024/03/13 17:36:33 - mmengine - INFO - [EVAL] Epoch 200 Iter   250/  528: Loss: 7.654 (6.845)
+2024/03/13 17:36:33 - mmengine - INFO - CeLoss: 7.60524, PlanRegLossLidar: 0.48911
+2024/03/13 17:36:42 - mmengine - INFO - [EVAL] Epoch 200 Iter   260/  528: Loss: 7.079 (6.872)
+2024/03/13 17:36:42 - mmengine - INFO - CeLoss: 6.87875, PlanRegLossLidar: 2.00617
+2024/03/13 17:36:51 - mmengine - INFO - [EVAL] Epoch 200 Iter   270/  528: Loss: 7.853 (6.877)
+2024/03/13 17:36:51 - mmengine - INFO - CeLoss: 7.67616, PlanRegLossLidar: 1.77231
+2024/03/13 17:36:59 - mmengine - INFO - [EVAL] Epoch 200 Iter   280/  528: Loss: 5.398 (6.812)
+2024/03/13 17:36:59 - mmengine - INFO - CeLoss: 5.38161, PlanRegLossLidar: 0.16465
+2024/03/13 17:37:07 - mmengine - INFO - [EVAL] Epoch 200 Iter   290/  528: Loss: 1.364 (6.760)
+2024/03/13 17:37:07 - mmengine - INFO - CeLoss: 1.36393, PlanRegLossLidar: 0.00195
+2024/03/13 17:37:15 - mmengine - INFO - [EVAL] Epoch 200 Iter   300/  528: Loss: 0.706 (6.562)
+2024/03/13 17:37:15 - mmengine - INFO - CeLoss: 0.70562, PlanRegLossLidar: 0.00141
+2024/03/13 17:37:23 - mmengine - INFO - [EVAL] Epoch 200 Iter   310/  528: Loss: 1.455 (6.478)
+2024/03/13 17:37:23 - mmengine - INFO - CeLoss: 1.45488, PlanRegLossLidar: 0.00081
+2024/03/13 17:37:30 - mmengine - INFO - [EVAL] Epoch 200 Iter   320/  528: Loss: 1.712 (6.457)
+2024/03/13 17:37:30 - mmengine - INFO - CeLoss: 1.71225, PlanRegLossLidar: 0.00054
+2024/03/13 17:37:38 - mmengine - INFO - [EVAL] Epoch 200 Iter   330/  528: Loss: 7.174 (6.423)
+2024/03/13 17:37:38 - mmengine - INFO - CeLoss: 7.15301, PlanRegLossLidar: 0.21245
+2024/03/13 17:37:46 - mmengine - INFO - [EVAL] Epoch 200 Iter   340/  528: Loss: 6.459 (6.433)
+2024/03/13 17:37:46 - mmengine - INFO - CeLoss: 6.43150, PlanRegLossLidar: 0.27331
+2024/03/13 17:37:55 - mmengine - INFO - [EVAL] Epoch 200 Iter   350/  528: Loss: 5.172 (6.455)
+2024/03/13 17:37:55 - mmengine - INFO - CeLoss: 5.13517, PlanRegLossLidar: 0.37077
+2024/03/13 17:38:03 - mmengine - INFO - [EVAL] Epoch 200 Iter   360/  528: Loss: 6.553 (6.456)
+2024/03/13 17:38:03 - mmengine - INFO - CeLoss: 6.29322, PlanRegLossLidar: 2.60067
+2024/03/13 17:38:12 - mmengine - INFO - [EVAL] Epoch 200 Iter   370/  528: Loss: 5.097 (6.465)
+2024/03/13 17:38:12 - mmengine - INFO - CeLoss: 5.02153, PlanRegLossLidar: 0.75102
+2024/03/13 17:38:21 - mmengine - INFO - [EVAL] Epoch 200 Iter   380/  528: Loss: 5.740 (6.468)
+2024/03/13 17:38:21 - mmengine - INFO - CeLoss: 5.70032, PlanRegLossLidar: 0.39917
+2024/03/13 17:38:29 - mmengine - INFO - [EVAL] Epoch 200 Iter   390/  528: Loss: 6.858 (6.482)
+2024/03/13 17:38:29 - mmengine - INFO - CeLoss: 6.68061, PlanRegLossLidar: 1.77103
+2024/03/13 17:38:38 - mmengine - INFO - [EVAL] Epoch 200 Iter   400/  528: Loss: 6.735 (6.522)
+2024/03/13 17:38:38 - mmengine - INFO - CeLoss: 6.65466, PlanRegLossLidar: 0.80671
+2024/03/13 17:38:46 - mmengine - INFO - [EVAL] Epoch 200 Iter   410/  528: Loss: 8.146 (6.559)
+2024/03/13 17:38:46 - mmengine - INFO - CeLoss: 8.11973, PlanRegLossLidar: 0.26548
+2024/03/13 17:38:54 - mmengine - INFO - [EVAL] Epoch 200 Iter   420/  528: Loss: 7.435 (6.581)
+2024/03/13 17:38:54 - mmengine - INFO - CeLoss: 7.19621, PlanRegLossLidar: 2.38955
+2024/03/13 17:39:03 - mmengine - INFO - [EVAL] Epoch 200 Iter   430/  528: Loss: 6.933 (6.590)
+2024/03/13 17:39:03 - mmengine - INFO - CeLoss: 6.89503, PlanRegLossLidar: 0.38075
+2024/03/13 17:39:11 - mmengine - INFO - [EVAL] Epoch 200 Iter   440/  528: Loss: 5.683 (6.589)
+2024/03/13 17:39:11 - mmengine - INFO - CeLoss: 5.59285, PlanRegLossLidar: 0.89682
+2024/03/13 17:39:20 - mmengine - INFO - [EVAL] Epoch 200 Iter   450/  528: Loss: 8.614 (6.619)
+2024/03/13 17:39:20 - mmengine - INFO - CeLoss: 8.46351, PlanRegLossLidar: 1.50085
+2024/03/13 17:39:28 - mmengine - INFO - [EVAL] Epoch 200 Iter   460/  528: Loss: 6.224 (6.626)
+2024/03/13 17:39:28 - mmengine - INFO - CeLoss: 6.05715, PlanRegLossLidar: 1.66352
+2024/03/13 17:39:33 - mmengine - INFO - [EVAL] Epoch 200 Iter   470/  528: Loss: 5.972 (6.663)
+2024/03/13 17:39:33 - mmengine - INFO - CeLoss: 5.91584, PlanRegLossLidar: 0.56145
+2024/03/13 17:39:36 - mmengine - INFO - [EVAL] Epoch 200 Iter   480/  528: Loss: 11.216 (6.709)
+2024/03/13 17:39:36 - mmengine - INFO - CeLoss: 11.07863, PlanRegLossLidar: 1.36990
+2024/03/13 17:39:40 - mmengine - INFO - [EVAL] Epoch 200 Iter   490/  528: Loss: 8.923 (6.735)
+2024/03/13 17:39:40 - mmengine - INFO - CeLoss: 8.85917, PlanRegLossLidar: 0.63677
+2024/03/13 17:39:43 - mmengine - INFO - [EVAL] Epoch 200 Iter   500/  528: Loss: 6.791 (6.756)
+2024/03/13 17:39:43 - mmengine - INFO - CeLoss: 6.69226, PlanRegLossLidar: 0.98895
+2024/03/13 17:39:49 - mmengine - INFO - [EVAL] Epoch 200 Iter   510/  528: Loss: 10.571 (6.779)
+2024/03/13 17:39:49 - mmengine - INFO - CeLoss: 10.32985, PlanRegLossLidar: 2.41053
+2024/03/13 17:39:54 - mmengine - INFO - [EVAL] Epoch 200 Iter   520/  528: Loss: 8.694 (6.807)
+2024/03/13 17:39:54 - mmengine - INFO - CeLoss: 8.66630, PlanRegLossLidar: 0.27232
+2024/03/13 17:40:23 - mmengine - INFO - plan_L2_1s is 0.31564201465180197
+2024/03/13 17:40:23 - mmengine - INFO - plan_L2_2s is 0.6064315384630242
+2024/03/13 17:40:23 - mmengine - INFO - plan_L2_3s is 0.986191372554603
+2024/03/13 17:40:23 - mmengine - INFO - plan_obj_col_1s is 0.014914772727272728
+2024/03/13 17:40:23 - mmengine - INFO - plan_obj_col_2s is 0.014382102272727274
+2024/03/13 17:40:23 - mmengine - INFO - plan_obj_col_3s is 0.013533775458309914
+2024/03/13 17:40:23 - mmengine - INFO - plan_obj_box_col_1s is 0.0005918560606060606
+2024/03/13 17:40:23 - mmengine - INFO - plan_obj_box_col_2s is 0.002189867424242424
+2024/03/13 17:40:23 - mmengine - INFO - plan_obj_box_col_3s is 0.004616477399725805
+2024/03/13 17:40:23 - mmengine - INFO - plan_L2_1s_single is 0.4294683739583029
+2024/03/13 17:40:23 - mmengine - INFO - plan_L2_2s_single is 1.076233062578226
+2024/03/13 17:40:23 - mmengine - INFO - plan_L2_3s_single is 1.992879789505806
+2024/03/13 17:40:23 - mmengine - INFO - plan_obj_col_1s_single is 0.014914772727272728
+2024/03/13 17:40:23 - mmengine - INFO - plan_obj_col_2s_single is 0.01278409090909091
+2024/03/13 17:40:23 - mmengine - INFO - plan_obj_col_3s_single is 0.010416666666666666
+2024/03/13 17:40:23 - mmengine - INFO - plan_obj_box_col_1s_single is 0.0007102272727272727
+2024/03/13 17:40:23 - mmengine - INFO - plan_obj_box_col_2s_single is 0.004261363636363636
+2024/03/13 17:40:23 - mmengine - INFO - plan_obj_box_col_3s_single is 0.013020833333333336
+2024/03/13 17:40:23 - mmengine - INFO - avg_l2 is 0.6360883085564764
+2024/03/13 17:40:23 - mmengine - INFO - avg_obj_col is 0.014276883486103304
+2024/03/13 17:40:23 - mmengine - INFO - avg_obj_box_col is 0.002466066961524763
+2024/03/13 17:40:23 - mmengine - INFO - avg_obj_box_col_single is 0.005997474747474748
+2024/03/13 17:40:23 - mmengine - INFO - avg_obj_col_single is 0.012705176767676768
+2024/03/13 17:40:23 - mmengine - INFO - avg_l2_single is 1.1661937420141115
+2024/03/13 17:40:24 - mmengine - INFO - time_used is {'encode': tensor(0.0071, device='cuda:0', dtype=torch.float64), 'mid': tensor(0.0544, device='cuda:0', dtype=torch.float64), 'autoreg': tensor(0.3642, device='cuda:0', dtype=torch.float64), 'total': tensor(0.4256, device='cuda:0', dtype=torch.float64), 'per_frame': tensor(0.0677, device='cuda:0', dtype=torch.float64)}
+2024/03/13 17:40:24 - mmengine - INFO - FPS is 14.760558839556536
+2024/03/13 17:40:24 - mmengine - INFO - per class iou sem at time 0:
+2024/03/13 17:40:24 - mmengine - INFO - others : 29.59%
+2024/03/13 17:40:24 - mmengine - INFO - barrier : 42.97%
+2024/03/13 17:40:24 - mmengine - INFO - bicycle : 29.15%
+2024/03/13 17:40:24 - mmengine - INFO - bus : 46.26%
+2024/03/13 17:40:24 - mmengine - INFO - car : 43.30%
+2024/03/13 17:40:24 - mmengine - INFO - construction_vehicle : 29.70%
+2024/03/13 17:40:24 - mmengine - INFO - motorcycle : 29.61%
+2024/03/13 17:40:24 - mmengine - INFO - pedestrian : 32.72%
+2024/03/13 17:40:24 - mmengine - INFO - traffic_cone : 26.51%
+2024/03/13 17:40:24 - mmengine - INFO - trailer : 33.85%
+2024/03/13 17:40:24 - mmengine - INFO - truck : 42.59%
+2024/03/13 17:40:24 - mmengine - INFO - driveable_surface : 53.15%
+2024/03/13 17:40:24 - mmengine - INFO - other_flat : 43.71%
+2024/03/13 17:40:24 - mmengine - INFO - sidewalk : 42.24%
+2024/03/13 17:40:24 - mmengine - INFO - terrain : 39.53%
+2024/03/13 17:40:24 - mmengine - INFO - manmade : 34.12%
+2024/03/13 17:40:24 - mmengine - INFO - vegetation : 36.23%
+2024/03/13 17:40:24 - mmengine - INFO - mIoU sem at time 0: 37.37%
+2024/03/13 17:40:24 - mmengine - INFO - per class iou sem at time 1:
+2024/03/13 17:40:24 - mmengine - INFO - others : 19.99%
+2024/03/13 17:40:24 - mmengine - INFO - barrier : 30.23%
+2024/03/13 17:40:24 - mmengine - INFO - bicycle : 15.79%
+2024/03/13 17:40:24 - mmengine - INFO - bus : 32.55%
+2024/03/13 17:40:24 - mmengine - INFO - car : 30.14%
+2024/03/13 17:40:24 - mmengine - INFO - construction_vehicle : 20.87%
+2024/03/13 17:40:24 - mmengine - INFO - motorcycle : 15.22%
+2024/03/13 17:40:24 - mmengine - INFO - pedestrian : 16.82%
+2024/03/13 17:40:24 - mmengine - INFO - traffic_cone : 14.04%
+2024/03/13 17:40:24 - mmengine - INFO - trailer : 21.31%
+2024/03/13 17:40:24 - mmengine - INFO - truck : 28.57%
+2024/03/13 17:40:24 - mmengine - INFO - driveable_surface : 44.00%
+2024/03/13 17:40:24 - mmengine - INFO - other_flat : 33.39%
+2024/03/13 17:40:24 - mmengine - INFO - sidewalk : 32.72%
+2024/03/13 17:40:24 - mmengine - INFO - terrain : 29.55%
+2024/03/13 17:40:24 - mmengine - INFO - manmade : 24.26%
+2024/03/13 17:40:24 - mmengine - INFO - vegetation : 28.75%
+2024/03/13 17:40:24 - mmengine - INFO - mIoU sem at time 1: 25.78%
+2024/03/13 17:40:24 - mmengine - INFO - per class iou sem at time 2:
+2024/03/13 17:40:24 - mmengine - INFO - others : 14.22%
+2024/03/13 17:40:24 - mmengine - INFO - barrier : 23.13%
+2024/03/13 17:40:24 - mmengine - INFO - bicycle : 9.35%
+2024/03/13 17:40:24 - mmengine - INFO - bus : 23.87%
+2024/03/13 17:40:24 - mmengine - INFO - car : 22.32%
+2024/03/13 17:40:24 - mmengine - INFO - construction_vehicle : 14.72%
+2024/03/13 17:40:24 - mmengine - INFO - motorcycle : 8.81%
+2024/03/13 17:40:24 - mmengine - INFO - pedestrian : 9.88%
+2024/03/13 17:40:24 - mmengine - INFO - traffic_cone : 9.00%
+2024/03/13 17:40:24 - mmengine - INFO - trailer : 15.02%
+2024/03/13 17:40:24 - mmengine - INFO - truck : 20.17%
+2024/03/13 17:40:24 - mmengine - INFO - driveable_surface : 38.06%
+2024/03/13 17:40:24 - mmengine - INFO - other_flat : 26.60%
+2024/03/13 17:40:24 - mmengine - INFO - sidewalk : 26.68%
+2024/03/13 17:40:24 - mmengine - INFO - terrain : 23.21%
+2024/03/13 17:40:24 - mmengine - INFO - manmade : 18.74%
+2024/03/13 17:40:24 - mmengine - INFO - vegetation : 22.86%
+2024/03/13 17:40:24 - mmengine - INFO - mIoU sem at time 2: 19.21%
+2024/03/13 17:40:24 - mmengine - INFO - per class iou sem at time 3:
+2024/03/13 17:40:24 - mmengine - INFO - others : 10.47%
+2024/03/13 17:40:24 - mmengine - INFO - barrier : 18.63%
+2024/03/13 17:40:24 - mmengine - INFO - bicycle : 5.87%
+2024/03/13 17:40:24 - mmengine - INFO - bus : 17.91%
+2024/03/13 17:40:24 - mmengine - INFO - car : 17.41%
+2024/03/13 17:40:24 - mmengine - INFO - construction_vehicle : 11.01%
+2024/03/13 17:40:24 - mmengine - INFO - motorcycle : 5.60%
+2024/03/13 17:40:24 - mmengine - INFO - pedestrian : 6.54%
+2024/03/13 17:40:24 - mmengine - INFO - traffic_cone : 6.78%
+2024/03/13 17:40:24 - mmengine - INFO - trailer : 11.13%
+2024/03/13 17:40:24 - mmengine - INFO - truck : 15.13%
+2024/03/13 17:40:24 - mmengine - INFO - driveable_surface : 33.75%
+2024/03/13 17:40:24 - mmengine - INFO - other_flat : 22.01%
+2024/03/13 17:40:24 - mmengine - INFO - sidewalk : 22.40%
+2024/03/13 17:40:24 - mmengine - INFO - terrain : 18.98%
+2024/03/13 17:40:24 - mmengine - INFO - manmade : 15.35%
+2024/03/13 17:40:24 - mmengine - INFO - vegetation : 18.54%
+2024/03/13 17:40:24 - mmengine - INFO - mIoU sem at time 3: 15.15%
+2024/03/13 17:40:24 - mmengine - INFO - per class iou sem at time 4:
+2024/03/13 17:40:24 - mmengine - INFO - others : 7.96%
+2024/03/13 17:40:24 - mmengine - INFO - barrier : 15.78%
+2024/03/13 17:40:24 - mmengine - INFO - bicycle : 4.05%
+2024/03/13 17:40:24 - mmengine - INFO - bus : 14.12%
+2024/03/13 17:40:24 - mmengine - INFO - car : 14.22%
+2024/03/13 17:40:24 - mmengine - INFO - construction_vehicle : 8.38%
+2024/03/13 17:40:24 - mmengine - INFO - motorcycle : 3.75%
+2024/03/13 17:40:24 - mmengine - INFO - pedestrian : 4.68%
+2024/03/13 17:40:24 - mmengine - INFO - traffic_cone : 5.67%
+2024/03/13 17:40:24 - mmengine - INFO - trailer : 8.83%
+2024/03/13 17:40:24 - mmengine - INFO - truck : 11.78%
+2024/03/13 17:40:24 - mmengine - INFO - driveable_surface : 30.28%
+2024/03/13 17:40:24 - mmengine - INFO - other_flat : 18.43%
+2024/03/13 17:40:24 - mmengine - INFO - sidewalk : 19.19%
+2024/03/13 17:40:24 - mmengine - INFO - terrain : 15.88%
+2024/03/13 17:40:24 - mmengine - INFO - manmade : 13.10%
+2024/03/13 17:40:24 - mmengine - INFO - vegetation : 15.44%
+2024/03/13 17:40:24 - mmengine - INFO - mIoU sem at time 4: 12.44%
+2024/03/13 17:40:24 - mmengine - INFO - per class iou sem at time 5:
+2024/03/13 17:40:24 - mmengine - INFO - others : 6.40%
+2024/03/13 17:40:24 - mmengine - INFO - barrier : 13.43%
+2024/03/13 17:40:24 - mmengine - INFO - bicycle : 3.07%
+2024/03/13 17:40:24 - mmengine - INFO - bus : 11.45%
+2024/03/13 17:40:24 - mmengine - INFO - car : 12.05%
+2024/03/13 17:40:24 - mmengine - INFO - construction_vehicle : 6.19%
+2024/03/13 17:40:24 - mmengine - INFO - motorcycle : 2.78%
+2024/03/13 17:40:24 - mmengine - INFO - pedestrian : 3.53%
+2024/03/13 17:40:24 - mmengine - INFO - traffic_cone : 4.74%
+2024/03/13 17:40:24 - mmengine - INFO - trailer : 7.26%
+2024/03/13 17:40:24 - mmengine - INFO - truck : 9.44%
+2024/03/13 17:40:24 - mmengine - INFO - driveable_surface : 27.53%
+2024/03/13 17:40:24 - mmengine - INFO - other_flat : 15.69%
+2024/03/13 17:40:24 - mmengine - INFO - sidewalk : 16.84%
+2024/03/13 17:40:24 - mmengine - INFO - terrain : 13.47%
+2024/03/13 17:40:24 - mmengine - INFO - manmade : 11.52%
+2024/03/13 17:40:24 - mmengine - INFO - vegetation : 13.22%
+2024/03/13 17:40:24 - mmengine - INFO - mIoU sem at time 5: 10.51%
+2024/03/13 17:40:24 - mmengine - INFO - per class iou vox at time 0:
+2024/03/13 17:40:24 - mmengine - INFO - occupied : 43.46%
+2024/03/13 17:40:24 - mmengine - INFO - mIoU vox at time 0: 43.46%
+2024/03/13 17:40:24 - mmengine - INFO - per class iou vox at time 1:
+2024/03/13 17:40:24 - mmengine - INFO - occupied : 34.63%
+2024/03/13 17:40:24 - mmengine - INFO - mIoU vox at time 1: 34.63%
+2024/03/13 17:40:24 - mmengine - INFO - per class iou vox at time 2:
+2024/03/13 17:40:24 - mmengine - INFO - occupied : 28.95%
+2024/03/13 17:40:24 - mmengine - INFO - mIoU vox at time 2: 28.95%
+2024/03/13 17:40:24 - mmengine - INFO - per class iou vox at time 3:
+2024/03/13 17:40:24 - mmengine - INFO - occupied : 25.07%
+2024/03/13 17:40:24 - mmengine - INFO - mIoU vox at time 3: 25.07%
+2024/03/13 17:40:24 - mmengine - INFO - per class iou vox at time 4:
+2024/03/13 17:40:24 - mmengine - INFO - occupied : 22.27%
+2024/03/13 17:40:24 - mmengine - INFO - mIoU vox at time 4: 22.27%
+2024/03/13 17:40:24 - mmengine - INFO - per class iou vox at time 5:
+2024/03/13 17:40:24 - mmengine - INFO - occupied : 20.18%
+2024/03/13 17:40:24 - mmengine - INFO - mIoU vox at time 5: 20.18%
+2024/03/13 17:40:24 - mmengine - INFO - PlanRegLoss is 0.9860179591090503
+2024/03/13 17:40:24 - mmengine - INFO - Current val iou is [43.459853529930115, 34.63289737701416, 28.948310017585754, 25.069037079811096, 22.26625829935074, 20.182690024375916]
+2024/03/13 17:40:24 - mmengine - INFO - Current val miou is [37.36659200752483, 25.775241150575525, 19.21443785814678, 15.14815615818781, 12.4435395878904, 10.506597972091507]
+2024/03/13 17:40:24 - mmengine - INFO - avg val iou is 26.62820816040039
+2024/03/13 17:40:24 - mmengine - INFO - avg val miou is 17.143331760284948
