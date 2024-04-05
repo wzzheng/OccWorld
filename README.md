@@ -79,7 +79,7 @@ python eval_metric_stp3.py --py-config config/occworld.py --work-dir out/occworl
 ### Visualization
 Visualize the results use the following code.
 ```
-python visulize_demo.py --py-config config/train_occworld.py --work-dir out/occworld
+python visualize_demo.py --py-config config/train_occworld.py --work-dir out/occworld
 ```
 Also, you can specific the visulized scene index by adding ```--scene-idx i0 i1 i2 ...```. After running the above code, two folders will 
 be created: "i_input" and "i." The "i" folder will contain the autoregressive predicted results 
