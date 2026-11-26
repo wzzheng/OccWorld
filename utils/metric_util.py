@@ -35,7 +35,7 @@ class MeanIoU:
                                                & (outputs == c)).item()
             self.total_positive[i] += torch.sum(outputs == c).item()
 
-        def _after_epoch(self):
+    def _after_epoch(self):
         if dist.is_available() and dist.is_initialized():
             dist.all_reduce(self.total_seen)
             dist.all_reduce(self.total_correct)
@@ -93,7 +93,7 @@ class multi_step_MeanIou:
                                                       & (outputs == c)).item()
                 self.total_positive[t, j] += torch.sum(outputs == c).item()
     
-        def _after_epoch(self):
+    def _after_epoch(self):
         if dist.is_available() and dist.is_initialized():
             dist.all_reduce(self.total_seen)
             dist.all_reduce(self.total_correct)
