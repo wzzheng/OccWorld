@@ -36,9 +36,10 @@ class MeanIoU:
             self.total_positive[i] += torch.sum(outputs == c).item()
 
     def _after_epoch(self):
-        dist.all_reduce(self.total_seen)
-        dist.all_reduce(self.total_correct)
-        dist.all_reduce(self.total_positive)
+        if dist.is_available() and dist.is_initialized():
+            dist.all_reduce(self.total_seen)
+            dist.all_reduce(self.total_correct)
+            dist.all_reduce(self.total_positive)
 
         ious = []
 
@@ -93,9 +94,10 @@ class multi_step_MeanIou:
                 self.total_positive[t, j] += torch.sum(outputs == c).item()
     
     def _after_epoch(self):
-        dist.all_reduce(self.total_seen)
-        dist.all_reduce(self.total_correct)
-        dist.all_reduce(self.total_positive)
+        if dist.is_available() and dist.is_initialized():
+            dist.all_reduce(self.total_seen)
+            dist.all_reduce(self.total_correct)
+            dist.all_reduce(self.total_positive)
         mious = []
         for t in range(self.times):
             ious = []
