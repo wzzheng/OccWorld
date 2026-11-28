@@ -73,6 +73,23 @@ class nuScenesSceneDatasetLidar:
         return input_occs[:self.return_len], output_occs[self.offset:], metas
 
     def get_meta_data(self, scene_name, idx):
+        """Return ego relative displacements and driving-mode commands.
+
+        Args:
+            scene_name (str): Scene identifier in ``self.nusc_infos``.
+            idx (int): Starting frame index within the scene.
+
+        Returns:
+            dict: Dictionary containing:
+                - rel_poses (np.ndarray): Shape ``(return_len + offset, 2)``.
+                  Per-step ``(dx, dy)`` ego displacement to the next frame
+                  (2 Hz) in the ego LiDAR frame (``+x`` right, ``+y`` forward);
+                  cumulative sum gives future trajectory waypoints.
+                - gt_mode (np.ndarray): Shape ``(return_len + offset, 3)``.
+                  One-hot driving command ``[turn_right, turn_left, go_straight]``:
+                  ``[1, 0, 0]`` for turning right, ``[0, 1, 0]`` for turning left,
+                  and ``[0, 0, 1]`` for going straight.
+        """
         gt_modes = []
         xys = []
         for i in range(self.return_len + self.offset):
